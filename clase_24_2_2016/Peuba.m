@@ -1,9 +1,10 @@
+clear;
+
 N = 16;
 
 F = ones(N,N);
 
 W = exp(-i*2*pi/N); %Complejo, valor constante.
-
 
 for i=1:N
     for j=1:N

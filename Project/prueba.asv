@@ -1,0 +1,9 @@
+clear;
+
+x=(1:16);
+h=(1:8);
+c = ifft(fft(x).*fft(h));
+
+c'
+
+fftGS(x)'
