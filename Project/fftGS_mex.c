@@ -1,5 +1,3 @@
-
-
 /*==========================================================
  * arrayProduct.c - example in MATLAB External Interfaces
  *

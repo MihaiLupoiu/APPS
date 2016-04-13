@@ -3,16 +3,19 @@
 #include <complex.h>
 #include <math.h>
 
-double complex * fftGS(double * vector, int ncol){
-	
-	double complex * x =(double complex *)malloc(ncol*sizeof(double complex));
+enum SIGN{
+	FORWARD = 1,
+	REVERSE = -1
+};
 
-	for (int i = 0; i < ncol; ++i)
-	{
-		x[i] = vector[i];	
-	}
+/* General FFT Using complex numbers.
+   Parameters: Pointer to vector of complex numbers, 
+   size of vector, FORWARD (FFT) or REVERSE (ifft).
+   Return: double complex pointer to vector.
+*/
+void fftGS_General(double complex * x, int ncol, enum SIGN sig){
 
-	int t = sqrt(ncol); // next pow to 2
+	int t = ceil(log(ncol)/log(2));
 
 	for (int q = t; 1 <= q; --q)
 	{
@@ -22,7 +25,7 @@ double complex * fftGS(double * vector, int ncol){
 
 		for (int j = 0; j < L_; ++j)
 		{
-			double complex w = cos(2*M_PI*j/L) - sin(2*M_PI*j/L)*I;
+			double complex w = cos(2*M_PI*j/L) + ( sig * sin(2*M_PI*j/L)*I);
 			for (int k = 0; k < r; ++k)
 			{
 				int index = (k*L)+L_+j;
@@ -34,24 +37,79 @@ double complex * fftGS(double * vector, int ncol){
 		}
 	}
 
-	return x;
+	// Bit Reversal 
+	// Algoritmo 1.5.1
+	for (int k = 0; k < ncol; ++k)
+	{
+		// Algoritmo 1.5.2
+		int j = 0;
+		int m = k;
+		for (int q = 0; q < t; ++q)
+		{
+			int s = floor(m/2);
+			j=2*j+(m-2*s);
+			m=s;
+		}
+		// End Algoritmo 1.5.2
+
+		double complex temportal_swap;
+		if (j>k){
+			temportal_swap = x[k];
+			x[k]=x[j];
+			x[j]=temportal_swap;
+		}
+	}
+
+}
+
+double complex * fftGS(double * vector, int ncol){
 	
+	double complex * x =(double complex *)malloc(ncol*sizeof(double complex));
+
+	for (int i = 0; i < ncol; ++i)
+	{
+		x[i] = vector[i];	
+	}
+
+	fftGS_General(x,ncol,FORWARD);
+
+	return x;
+
+}
+
+double * ifftGS(double complex * x, int ncol){
+	
+	double * X = (double *)malloc(ncol*sizeof(double)); 
+
+	fftGS_General(x,ncol,REVERSE);
+
+	for (int i = 0; i < ncol; ++i)
+	{
+		X[i]=creal(x[i])/ncol;
+	}
+
+	return X;
 }
 
 int main(){
-	double x[4] = {1,2,3,4};
+	double x[8] = {1,2,3,4,5,6,7,8};
 
 	//double v = 3.0;
 	//double complex b2=v;
 	//printf("%f + %f",creal(b2),cimag(b2));
 
 	
-	double complex * X = fftGS(x, 4);
+	double complex * X = fftGS(x, 8);
+
+	double * X2 = ifftGS(X,8);
+
 	
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < 8; ++i)
 	{
-		printf("%f + %f \n",creal(X[i]),cimag(X[i]));		
+		//printf("%f + %f \n",creal(X[i]),cimag(X[i]));		
+		printf("%f\n",X2[i]);		
 	}
 
+	free(X);
 	return 0;
 }
