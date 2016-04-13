@@ -22,20 +22,19 @@ end
 %Algorithmo 1.5.1
 for k =1:n
     % Algorithmo 1.5.2
-    j=0; 
-    m=k-1;
+    j=0
+    m=k
     for q=1:t
-        s = floor(m/2);
-        bq = m-2*s;
-        j = 2*j+bq;
-        m=s;
+        s = floor(m/2)
+        bq = m-2*s
+        j = 2*j+bq
+        m=s
     end
     % Fin Algorithmo 1.5.2
-    j=j+1;
     if j > k
-        value = x(k);
-        x(k) = x(j);
-        x(j) = value;
+        x(j)
+        x()
+        
     end
     
 end
