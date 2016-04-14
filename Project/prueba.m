@@ -27,4 +27,4 @@ h2 = [h zeros(1,4)];
 fftx2 = fftGS(x2);
 ffth2= fftGS(h2);
 
-c3 = ifftGS(fftx2.*ffth2)
+c3 = ifftGS(fftx2.*ffth2)'

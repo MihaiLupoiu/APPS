@@ -1,12 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <complex.h>
-#include <math.h>
-
-enum SIGN{
-	FORWARD = 1,
-	REVERSE = -1
-};
+#include "fftGS.h"
 
 /* General FFT Using complex numbers.
    Parameters: Pointer to vector of complex numbers, 
@@ -89,27 +81,4 @@ double * ifftGS(double complex * x, int ncol){
 	}
 
 	return X;
-}
-
-int main(){
-	double x[8] = {1,2,3,4,5,6,7,8};
-
-	//double v = 3.0;
-	//double complex b2=v;
-	//printf("%f + %f",creal(b2),cimag(b2));
-
-	
-	double complex * X = fftGS(x, 8);
-
-	double * X2 = ifftGS(X,8);
-
-	
-	for (int i = 0; i < 8; ++i)
-	{
-		//printf("%f + %f \n",creal(X[i]),cimag(X[i]));		
-		printf("%f\n",X2[i]);		
-	}
-
-	free(X);
-	return 0;
 }
